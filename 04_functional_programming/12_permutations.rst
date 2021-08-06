@@ -1,4 +1,4 @@
-Itertools - accumulate()
+Itertools - permutations()
 #########################
 
 Example 1
