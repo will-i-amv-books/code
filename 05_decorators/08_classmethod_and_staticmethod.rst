@@ -1,4 +1,4 @@
-classmethod() and staticmethod()
+@classmethod and @staticmethod
 #################################
 
 Example 1
