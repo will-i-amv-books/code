@@ -1,4 +1,4 @@
-List comprehensions
+Decorators
 ####################
 
 Example 1
