@@ -1,5 +1,5 @@
-Decorators with arguments
-##########################
+Decorators for type/value checking
+###################################
 
 Example 1
 ---------
