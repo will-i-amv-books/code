@@ -1,16 +1,26 @@
->>> def eggs(function):
-...    def _eggs(*args, **kwargs):
-...        return function(*args, **kwargs)
-...    return _eggs
+functools.wraps()
+##################
 
->>> @eggs
-... def spam(a, b, c):
-...     '''The spam function Returns a * b + c'''
-...     return a * b + c
+Example 1
+---------
 
+**Incorrect decorator definition 
+(not using functools.wraps)**
+
+.. code-block:: python
+
+    def eggs(function):
+        def _eggs(*args, **kwargs):
+            return function(*args, **kwargs)
+        return _eggs
+
+    @eggs
+    def spam(a, b, c):
+        '''The spam function Returns a * b + c'''
+        return a * b + c
 
 >>> help(spam)
-Help on function _eggs in module ...:
+Help on function _eggs in module :
 <BLANKLINE>
 _eggs(*args, **kwargs)
 <BLANKLINE>
@@ -18,21 +28,27 @@ _eggs(*args, **kwargs)
 >>> spam.__name__
 '_eggs'
 
-------------------------------------------------------------------------------
+Example 2
+---------
 
->>> import functools
+**Correct decorator definition 
+(using functools.wraps)**
+
+.. code-block:: python
+
+    import functools
 
 
->>> def eggs(function):
-...     @functools.wraps(function)
-...     def _eggs(*args, **kwargs):
-...         return function(*args, **kwargs)
-...     return _eggs
+    def eggs(function):
+        @functools.wraps(function)
+        def _eggs(*args, **kwargs):
+            return function(*args, **kwargs)
+        return _eggs
 
->>> @eggs
-... def spam(a, b, c):
-...     '''The spam function Returns a * b + c'''
-...     return a * b + c
+    @eggs
+    def spam(a, b, c):
+        '''The spam function Returns a * b + c'''
+        return a * b + c
 
 
 >>> help(spam)
