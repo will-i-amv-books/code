@@ -11,7 +11,7 @@ Example 1
     def eggs(function):
         @functools.wraps(function)
         def _eggs(*args, **kwargs):
-            print('%r got args: %r and kwargs: %r' % (
+            print('{} got args: {} and kwargs: {}'.format(
                 function.__name__, args, kwargs))
             return function(*args, **kwargs)
         return _eggs
