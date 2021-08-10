@@ -1,13 +1,24 @@
->>> from coroutine_decorator import coroutine
+Combining generators with coroutines
+#####################################
+
+Example 1
+---------
+
+**Implementing a function that calculates the average
+combining generators with coroutines**
+
+.. code-block:: python
+
+    from coroutine_decorator import coroutine
 
 
->>> @coroutine
-... def average():
-...     count = 1	
-...     total = yield
-...     while True:
-...         total += yield total / count
-...         count += 1
+    @coroutine
+    def average():
+        count = 1	
+        total = yield
+        while True:
+            total += yield total / count
+            count += 1
 
 >>> averager = average()
 >>> averager.send(20)
@@ -19,22 +30,28 @@
 >>> averager.send(-25)
 5.0
 
-------------------------------------------------------------------------------
+Example 2
+---------
 
->>> @coroutine
-... def print_(formatstring):
-...     while True:
-...         print(formatstring % (yield))
+**Implementing a function that calculates the average
+using only coroutines**
+
+.. code-block:: python
+
+    @coroutine
+    def print_(formatstring):
+        while True:
+            print(formatstring % (yield))
 
 
->>> @coroutine
-... def average(target):
-...     count = 0
-...     total = 0
-...     while True:
-...         count += 1
-...         total += yield
-...         target.send(total / count)
+    @coroutine
+    def average(target):
+        count = 0
+        total = 0
+        while True:
+            count += 1
+            total += yield
+            target.send(total / count)
 
 >>> printer = print_('%.1f')
 >>> averager = average(printer)
@@ -47,24 +64,30 @@
 >>> averager.send(-25)
 5.0
 
-------------------------------------------------------------------------------
+Example 3
+---------
 
->>> @coroutine
-... def groupby():
-...     # Fetch the first key and value and initialize the state
-...     # variables
-...     key, value = yield
-...     old_key, values = key, []
-...     while True:
-...         # Store the previous value so we can store it in the
-...         # list
-...         old_value = value
-...         if key == old_key:
-...             key, value = yield
-...         else:
-...             key, value = yield old_key, values
-...             old_key, values = key, []
-...         values.append(old_value)
+**Implementing a custom itertools.groupby() function
+combining generators with coroutines**
+
+.. code-block:: python
+
+    @coroutine
+    def groupby():
+        # Fetch the first key and value and initialize the state
+        # variables
+        key, value = yield
+        old_key, values = key, []
+        while True:
+            # Store the previous value so we can store it in the
+            # list
+            old_value = value
+            if key == old_key:
+                key, value = yield
+            else:
+                key, value = yield old_key, values
+                old_key, values = key, []
+            values.append(old_value)
 
 
 >>> grouper = groupby()
@@ -80,27 +103,33 @@
 >>> grouper.send((None, None))
 ('a', [1, 2])
 
-------------------------------------------------------------------------------
+Example 4
+---------
 
->>> @coroutine
-... def print_(formatstring):
-...     while True:
-...         print(formatstring % (yield))
+**Implementing a custom itertools.groupby() function
+with only coroutines**
+
+.. code-block:: python
+
+    @coroutine
+    def print_(formatstring):
+        while True:
+            print(formatstring % (yield))
 
 
->>> @coroutine
-... def groupby(target):
-...     old_key = None
-...     while True:
-...         key, value = yield
-...         if old_key != key:
-...             # A different key means a new group so send the
-...             # previous group and restart the cycle.
-...             if old_key and values:
-...                 target.send((old_key, values))
-...             values = []
-...             old_key = key
-...         values.append(value)
+    @coroutine
+    def groupby(target):
+        old_key = None
+        while True:
+            key, value = yield
+            if old_key != key:
+                # A different key means a new group so send the
+                # previous group and restart the cycle.
+                if old_key and values:
+                    target.send((old_key, values))
+                values = []
+                old_key = key
+            values.append(value)
 
 
 >>> grouper = groupby(print_('group: %s, values: %s'))
