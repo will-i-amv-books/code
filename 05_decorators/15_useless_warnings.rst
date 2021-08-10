@@ -1,38 +1,53 @@
->>> import warnings
->>> import functools
+Decorators to supress useless warnings
+#######################################
 
+Example 1
+---------
 
->>> def ignore_warning(warning, count=None):
-...     def _ignore_warning(function):
-...         @functools.wraps(function)
-...         def __ignore_warning(*args, **kwargs):
-...             # Execute the code while recording all warnings
-...             with warnings.catch_warnings(record=True) as ws:
-...                 # Catch all warnings of this type
-...                 warnings.simplefilter('always', warning)
-...                 # Execute the function
-...                 result = function(*args, **kwargs)
-... 
-...             # Now that all code was executed and the warnings
-...             # collected, re-send all warnings that are beyond our
-...             # expected number of warnings
-...             if count is not None:
-...                 for w in ws[count:]:
-...                     warnings.showwarning(
-...                         message=w.message,
-...                         category=w.category,
-...                         filename=w.filename,
-...                         lineno=w.lineno,
-...                         file=w.file,
-...                         line=w.line,
-...                     )
-... 
-...             return result
-...         return __ignore_warning
-...     return _ignore_warning
+**Basic usage**
 
+.. code-block:: python
 
->>> @ignore_warning(DeprecationWarning, count=1)
-... def spam():
-...     warnings.warn('deprecation 1', DeprecationWarning)
-...     warnings.warn('deprecation 2', DeprecationWarning)
+    import warnings
+    import functools
+
+    def ignore_warning(warning, count=None):
+        def _ignore_warning(function):
+            @functools.wraps(function)
+            def __ignore_warning(*args, **kwargs):
+                # Execute the code while recording all warnings
+                with warnings.catch_warnings(record=True) as ws:
+                    # Catch all warnings of this type
+                    warnings.simplefilter('always', warning)
+                    # Execute the function
+                    result = function(*args, **kwargs)
+
+                # Now that all code was executed and the warnings
+                # collected, re-send all warnings that are beyond our
+                # expected number of warnings
+                if count is not None:
+                    for w in ws[count:]:
+                        warnings.showwarning(
+                            message=w.message,
+                            category=w.category,
+                            filename=w.filename,
+                            lineno=w.lineno,
+                            file=w.file,
+                            line=w.line,
+                        )
+
+                return result
+            return __ignore_warning
+        return _ignore_warning
+
+    # Ignore only the first warning and print the second
+    @ignore_warning(DeprecationWarning, count=1)
+    def spam():
+        warnings.warn('deprecation 1', DeprecationWarning)
+        warnings.warn('deprecation 2', DeprecationWarning)
+
+>>> spam()
+Warning (from warnings module):
+  File "<pyshell#6>", line 4
+DeprecationWarning: deprecation 2
+
