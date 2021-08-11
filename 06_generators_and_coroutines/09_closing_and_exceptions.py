@@ -7,11 +7,11 @@ def simple_coroutine():
     try:
         while True:
             item = yield
-            print('Got item: %r' % item)
+            print('Got item: {}'.format(item))
     except GeneratorExit:
         print('Normal exit')
     except Exception as e:
-        print('Exception exit: %r' % e)
+        print('Exception exit: {}'.format(e))
         raise
     finally:
         print('Any exit')
