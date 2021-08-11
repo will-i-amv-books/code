@@ -1,5 +1,10 @@
+###############################################
+# Using SelectorEventLoop (for UNIX systems)
+###############################################
+
 import sys
 import selectors
+import asyncio
 
 
 def read(fh):
@@ -16,16 +21,11 @@ if __name__ == '__main__':
         for key, mask in selector.select():
             # The data attribute contains the read function here
             callback = key.data
+            
             # Call it with the fileobj (stdin here)
             callback(key.fileobj)
-
-##############################################################################
-
-import asyncio
-import selectors
 
 
 selector = selectors.SelectSelector()
 loop = asyncio.SelectorEventLoop(selector)
 asyncio.set_event_loop(loop)
-

@@ -1,3 +1,6 @@
+##################################################
+# Using asyncio - Python 3.4
+
 import asyncio
 
 
@@ -5,21 +8,8 @@ import asyncio
 def sleeper():
     yield from asyncio.sleep(0.1)
 
-##############################################################################
-
-async def some_coroutine():
-    pass
-
-##############################################################################
-
-import asyncio
-
-
-@asyncio.coroutine
-def some_coroutine():
-    pass
-
-##############################################################################
+##################################################
+# Using asyncio - Python 3.5+
 
 import asyncio
 
